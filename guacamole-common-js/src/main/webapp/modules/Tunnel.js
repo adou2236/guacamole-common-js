@@ -969,11 +969,27 @@ Guacamole.WebSocketTunnel = function(tunnelURL) {
                 close_tunnel(new Guacamole.Status(Guacamole.Status.Code.UPSTREAM_NOT_FOUND));
 
         };
+        function isJSON(str) {
+            if (typeof str == 'string') {
+                try {
+                    var obj=JSON.parse(str);
+                    if(typeof obj == 'object' && obj ){
+                        return JSON.parse(str).data;
+                    }else{
+                        return str;
+                    }
+
+                } catch(e) {
+                    return str;
+                }
+            }
+        }
         
         socket.onmessage = function(event) {
 
             reset_timeout();
 
+            var message = isJSON(event.data)
             var message = event.data;
             var startIndex = 0;
             var elementEnd;
